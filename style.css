@@ -1,0 +1,279 @@
+/* ===========================
+   LEGO Clock - iPad PWA
+   =========================== */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Color tokens — tuned to match reference image */
+:root {
+  --blue-base: #4A90E2;
+  --blue-dark: #357ABD;
+  --blue-darker: #2A5F94;
+  --blue-light: #6FA8E8;
+
+  --green-base: #6BB13C;
+  --green-light: #93D75A;
+  --green-dark: #4A8520;
+  --green-darker: #366316;
+
+  --gray-base: #6E665D;       /* warmer gray */
+  --gray-light: #9A9189;
+  --gray-dark: #4A443D;
+  --gray-darker: #322D27;
+
+  --white-base: #ECEFF3;
+  --white-shadow: #B8BCC4;
+
+  /* Cell sizing — clamped so 6 digits + 2 colons + gaps fit with margin */
+  --cell: min(1.8vw, 4.2vh, 32px);
+  --bg-stud: calc(var(--cell) / 2);
+}
+
+/* White theme — overrides green tokens */
+:root[data-theme="white"] {
+  --green-base:   #E5EAF1;
+  --green-light:  #FFFFFF;
+  --green-dark:   #A9B0BC;
+  --green-darker: #757C88;
+}
+
+/* Orange theme — overrides green tokens */
+:root[data-theme="orange"] {
+  --green-base:   #F08C28;
+  --green-light:  #FFB658;
+  --green-dark:   #B5610A;
+  --green-darker: #804500;
+}
+
+/* ===========================
+   SKY (background)
+   =========================== */
+
+.sky {
+  position: fixed;
+  inset: 0;
+  background: var(--blue-base);
+  /* Tiled background pattern: 1x1 LEGO studs across blue */
+  background-image:
+    radial-gradient(circle at 50% 50%,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0.22) 22%,
+      rgba(0, 0, 0, 0.10) 26%,
+      rgba(0, 0, 0, 0.10) 32%,
+      transparent 34%);
+  background-size: var(--bg-stud) var(--bg-stud);
+  background-position: 0 0;
+}
+
+/* ===========================
+   LEGO CELL (2x2 stud block)
+   Every digit / cloud is built from these.
+   =========================== */
+
+.cell {
+  width: var(--cell);
+  height: var(--cell);
+  position: relative;
+  /* Block base color */
+  background: var(--c, transparent);
+  /* Block 3D edges (top-left highlight, bottom-right shadow) */
+  box-shadow:
+    inset 0 calc(var(--cell) * 0.08) 0 0 var(--c-hi, rgba(255,255,255,0.22)),
+    inset calc(var(--cell) * 0.08) 0 0 0 var(--c-hi, rgba(255,255,255,0.22)),
+    inset 0 calc(var(--cell) * -0.08) 0 0 var(--c-lo, rgba(0,0,0,0.30)),
+    inset calc(var(--cell) * -0.08) 0 0 0 var(--c-lo, rgba(0,0,0,0.30));
+}
+
+/* 4 studs per cell — single tiled radial-gradient (2x2) */
+.cell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 50% 50%,
+      rgba(255,255,255,0.10) 0%,
+      rgba(255,255,255,0.32) 18%,
+      rgba(255,255,255,0.05) 30%,
+      transparent 34%,
+      rgba(0,0,0,0.18) 40%,
+      transparent 46%);
+  background-size: 50% 50%;
+  background-position: 0 0;
+  pointer-events: none;
+}
+
+/* Color variants — drive 3D shading from theme tokens so themes recolor everything */
+.cell.g  { --c: var(--green-base);   --c-hi: var(--green-light);  --c-lo: var(--green-dark); }
+.cell.gl { --c: var(--green-light);  --c-hi: #FFFFFF;             --c-lo: var(--green-base); }
+.cell.gs { --c: var(--green-dark);   --c-hi: var(--green-base);   --c-lo: var(--green-darker); }
+.cell.gy { --c: var(--gray-base);    --c-hi: var(--gray-light);   --c-lo: var(--gray-dark); }
+.cell.gyl{ --c: var(--gray-light);   --c-hi: #BFB9B0;             --c-lo: var(--gray-base); }
+.cell.gyd{ --c: var(--gray-dark);    --c-hi: var(--gray-base);    --c-lo: var(--gray-darker); }
+.cell.w  { --c: var(--white-base);   --c-hi: #FFFFFF;             --c-lo: var(--white-shadow); }
+.cell.ws { --c: var(--white-shadow); --c-hi: var(--white-base);   --c-lo: #95A1B3; }
+
+/* ===========================
+   CLOCK LAYOUT
+   =========================== */
+
+.clock {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.time {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--cell) * 0.4);
+}
+
+/* A single digit — grid of cells */
+.digit {
+  display: grid;
+  grid-template-columns: repeat(7, var(--cell));
+  grid-auto-rows: var(--cell);
+  gap: 0;
+}
+
+/* Colon (two stacked dots) */
+.colon {
+  display: grid;
+  grid-template-columns: repeat(2, var(--cell));
+  grid-auto-rows: var(--cell);
+  gap: 0;
+}
+
+/* ===========================
+   BOTTOM LABELS (PM, date)
+   =========================== */
+
+.label {
+  position: fixed;
+  bottom: calc(var(--cell) * 0.6);
+  padding: calc(var(--cell) * 0.25) calc(var(--cell) * 0.5);
+  background: var(--blue-dark);
+  color: rgba(255, 255, 255, 0.85);
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  font-size: calc(var(--cell) * 0.7);
+  letter-spacing: 2px;
+  border-radius: calc(var(--cell) * 0.15);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.15),
+    inset 0 -2px 0 rgba(0,0,0,0.30);
+}
+
+.label.ampm {
+  bottom: auto;
+  top: calc(var(--cell) * 0.6);
+  right: calc(var(--cell) * 0.6);
+}
+
+/* ===========================
+   COLOR PICKER (bottom-left)
+   =========================== */
+
+.color-picker {
+  position: fixed;
+  bottom: calc(var(--cell) * 0.6);
+  left: calc(var(--cell) * 0.6);
+  display: flex;
+  gap: calc(var(--cell) * 0.35);
+  padding: calc(var(--cell) * 0.4) calc(var(--cell) * 0.5);
+  background: rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: calc(var(--cell) * 0.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.10);
+}
+
+.color-dot {
+  width: calc(var(--cell) * 1.2);
+  height: calc(var(--cell) * 1.2);
+  border-radius: 50%;
+  background: var(--dot-c);
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.7;
+  transition: opacity 0.2s, transform 0.2s, border-color 0.2s;
+}
+
+.color-dot:hover { opacity: 0.95; }
+
+.color-dot.active {
+  opacity: 1;
+  border-color: rgba(255, 255, 255, 0.95);
+  transform: scale(1.08);
+}
+.label.date {
+  right: calc(var(--cell) * 0.6);
+  font-size: calc(var(--cell) * 2.8);
+  padding: calc(var(--cell) * 0.5) calc(var(--cell) * 1);
+  letter-spacing: 6px;
+  border-radius: calc(var(--cell) * 0.3);
+  background: rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.10);
+}
+
+/* ===========================
+   CLOUD
+   =========================== */
+
+.cloud {
+  position: fixed;
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(3, var(--cell));
+  grid-auto-rows: var(--cell);
+  gap: 0;
+  /* Cloud shape — horizontal puffy (5 cols x 3 rows) */
+  animation: cloud-drift var(--d, 90s) linear infinite;
+  animation-delay: var(--del, 0s);
+  will-change: transform;
+}
+
+@keyframes cloud-drift {
+  from { transform: translateX(-30vw); }
+  to   { transform: translateX(110vw); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cloud { animation: none; }
+}
+
+/* Cloud cells are placed via inline grid-area in JS (or template).
+   We will render them as .cell.w / .cell.ws via JS. */
+
+/* ===========================
+   RESPONSIVE SIZING
+   Optimized for iPad landscape (~1180–1366 wide)
+   =========================== */
+
+/* Responsive overrides */
+@media (max-aspect-ratio: 1/1) {
+  /* Portrait — favor width */
+  :root {
+    --cell: min(4vw, 5vh, 32px);
+    --bg-stud: calc(var(--cell) / 2);
+  }
+}

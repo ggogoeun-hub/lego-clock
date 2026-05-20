@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="LEGO Clock">
+  <meta name="theme-color" content="#4A90E2">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="icon" href="icon-180.png">
+  <link rel="manifest" href="manifest.json">
+  <title>LEGO Clock</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sky">
+    <!-- Clouds — drift horizontally; each with own speed + phase -->
+    <div class="cloud" style="top: 14%;  --d: 90s;  --del:   0s;"></div>
+    <div class="cloud" style="top: 22%;  --d: 120s; --del: -55s;"></div>
+    <div class="cloud" style="bottom: 14%; --d: 105s; --del: -75s;"></div>
+    <div class="cloud" style="bottom: 6%;  --d: 80s;  --del: -25s;"></div>
+
+    <!-- Clock face -->
+    <div class="clock">
+      <div class="time" id="time"></div>
+    </div>
+
+    <!-- Bottom labels -->
+    <div class="label ampm" id="ampm">PM</div>
+    <div class="label date" id="date">05.20&nbsp;&nbsp;WED</div>
+
+    <!-- Color picker -->
+    <div class="color-picker" id="colorPicker">
+      <button class="color-dot" data-theme="white"  style="--dot-c: #ECEFF3;" aria-label="White"></button>
+      <button class="color-dot active" data-theme="green" style="--dot-c: #6BB13C;" aria-label="Green"></button>
+      <button class="color-dot" data-theme="orange" style="--dot-c: #F08C28;" aria-label="Orange"></button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

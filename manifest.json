@@ -1,0 +1,23 @@
+{
+  "name": "LEGO Clock",
+  "short_name": "LEGO Clock",
+  "description": "A LEGO pixel-art fullscreen clock for iPad.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#4A90E2",
+  "theme_color": "#4A90E2",
+  "icons": [
+    {
+      "src": "icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
