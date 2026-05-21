@@ -355,9 +355,9 @@ html, body {
 
 /* Responsive overrides */
 @media (max-aspect-ratio: 1/1) {
-  /* Portrait — favor width */
+  /* Portrait — constrain by vw so HH:MM:SS (~48.8 cells wide) fits horizontally */
   :root {
-    --cell: min(4vw, 5vh, 32px);
+    --cell: min(1.85vw, 4vh, 18px);
     --bg-stud: calc(var(--cell) / 2);
   }
 }

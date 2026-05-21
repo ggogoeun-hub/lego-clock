@@ -373,12 +373,27 @@ function analogTick() {
   analogRafId = requestAnimationFrame(analogTick);
 }
 
+const ANALOG_BG = { green: '#dfece4', black: '#2a2d34', white: '#e8eaf1' };
+
+/** Sync body/html background to prevent sub-pixel gap on iOS Safari */
+function syncBodyBg(mode, analogTheme) {
+  if (mode === 'analog') {
+    document.body.style.background = ANALOG_BG[analogTheme] || '#e8eaf1';
+    document.documentElement.style.background = document.body.style.background;
+  } else {
+    document.body.style.background = '';
+    document.documentElement.style.background = '';
+  }
+}
+
 /** Analog theme picker */
 function applyAnalogTheme(theme) {
   document.getElementById('analogScreen').setAttribute('data-theme', theme);
   document.querySelectorAll('.a-swatch').forEach(btn =>
     btn.classList.toggle('active', btn.dataset.theme === theme)
   );
+  const mode = document.documentElement.getAttribute('data-mode');
+  syncBodyBg(mode, theme);
   try { localStorage.setItem('analogTheme', theme); } catch (e) {}
 }
 
@@ -395,6 +410,8 @@ function applyMode(mode) {
   if (mode === 'analog' && !analogRafId) {
     analogRafId = requestAnimationFrame(analogTick);
   }
+  const analogTheme = document.getElementById('analogScreen').dataset.theme || 'white';
+  syncBodyBg(mode, analogTheme);
   try { localStorage.setItem('clockMode', mode); } catch (e) {}
 }
 
