@@ -39,6 +39,10 @@ html, body {
   --white-base: #ECEFF3;
   --white-shadow: #B8BCC4;
 
+  --ink-base:  #2A2A2A;
+  --ink-light: #4A4A4A;
+  --ink-dark:  #0A0A0A;
+
   /* Cell sizing — tuned for iPad 6 (1024x768) baseline; scales up on larger iPads */
   --cell: min(1.95vw, 4vh, 24px);
   --bg-stud: calc(var(--cell) / 2);
@@ -132,6 +136,7 @@ html, body {
 .cell.gyd{ --c: var(--gray-dark);    --c-hi: var(--gray-base);    --c-lo: var(--gray-darker); }
 .cell.w  { --c: var(--white-base);   --c-hi: #FFFFFF;             --c-lo: var(--white-shadow); }
 .cell.ws { --c: var(--white-shadow); --c-hi: var(--white-base);   --c-lo: #95A1B3; }
+.cell.k  { --c: var(--ink-base);     --c-hi: var(--ink-light);    --c-lo: var(--ink-dark); }
 
 /* ===========================
    CLOCK LAYOUT
@@ -269,29 +274,27 @@ html, body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cloud, .emoji-float { animation: none; }
+  .cloud, .icon-float { animation: none; }
 }
 
 /* ===========================
-   EMOJI FLOATS (orange theme)
+   LEGO ICON FLOATS (orange theme)
    =========================== */
 
-.emoji-float {
+.icon-float {
   position: fixed;
   left: 0;
-  font-size: calc(var(--cell) * 4);
-  line-height: 1;
   display: none;
+  grid-auto-rows: var(--cell);
+  gap: 0;
   animation: cloud-drift var(--d, 90s) linear infinite;
   animation-delay: var(--del, 0s);
   will-change: transform;
-  /* Subtle drop shadow so emoji reads against blue */
-  filter: drop-shadow(0 calc(var(--cell) * 0.1) calc(var(--cell) * 0.15) rgba(0,0,0,0.25));
 }
 
-/* On orange theme: swap clouds → music emoji */
+/* On orange theme: swap clouds → LEGO music icons */
 :root[data-theme="orange"] .cloud { display: none; }
-:root[data-theme="orange"] .emoji-float { display: block; }
+:root[data-theme="orange"] .icon-float { display: grid; }
 
 /* Cloud cells are placed via inline grid-area in JS (or template).
    We will render them as .cell.w / .cell.ws via JS. */

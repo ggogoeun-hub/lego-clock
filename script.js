@@ -150,6 +150,50 @@ const CHAR_CLASS = {
   'B': 'g', 'L': 'gl', 'S': 'gs',
   'g': 'gy', 'd': 'gyd',
   'w': 'w', 'W': 'ws',
+  'K': 'k',
+};
+
+/* LEGO music icons — black (K) body + gray (g) outline, same cell system as digits.
+   Used on orange theme in place of clouds. */
+const ICONS = {
+  guitar: [
+    '....gg',
+    '...gKg',
+    '..gKKg',
+    '.gKKg.',
+    '.gKKg.',
+    'gKKKg.',
+    'gKKg..',
+    'gggg..',
+  ],
+  note: [
+    '..gg',
+    '.gKg',
+    '.gKg',
+    '.gKg',
+    'gKKg',
+    'gKKg',
+    '.gg.',
+  ],
+  note2: [
+    'gggggg',
+    'gKKKKg',
+    '.gKgKg',
+    '.gKgKg',
+    'gKKgKg',
+    'gKKgKg',
+    'gg.gg.',
+  ],
+  mic: [
+    '.ggg.',
+    'gKKKg',
+    'gKKKg',
+    'gKKKg',
+    '.gKg.',
+    '..g..',
+    '..g..',
+    '.ggg.',
+  ],
 };
 
 /** Render a 2D pattern (array of strings) into the given container as .cell divs */
@@ -233,6 +277,15 @@ function renderClouds() {
   document.querySelectorAll('.cloud').forEach(el => renderCloud(el));
 }
 
+/** Render LEGO icon floats based on their data-icon attribute */
+function renderIcons() {
+  document.querySelectorAll('.icon-float').forEach(el => {
+    const key = el.dataset.icon;
+    const pattern = ICONS[key];
+    if (pattern) renderPattern(el, pattern);
+  });
+}
+
 /** Wake Lock API — keep screen on while clock is visible */
 let wakeLock = null;
 async function requestWakeLock() {
@@ -274,6 +327,7 @@ if (savedTheme) applyTheme(savedTheme);
 
 /** Init */
 renderClouds();
+renderIcons();
 tick();
 setInterval(tick, 1000);
 requestWakeLock();
