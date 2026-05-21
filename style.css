@@ -269,8 +269,29 @@ html, body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cloud { animation: none; }
+  .cloud, .emoji-float { animation: none; }
 }
+
+/* ===========================
+   EMOJI FLOATS (orange theme)
+   =========================== */
+
+.emoji-float {
+  position: fixed;
+  left: 0;
+  font-size: calc(var(--cell) * 4);
+  line-height: 1;
+  display: none;
+  animation: cloud-drift var(--d, 90s) linear infinite;
+  animation-delay: var(--del, 0s);
+  will-change: transform;
+  /* Subtle drop shadow so emoji reads against blue */
+  filter: drop-shadow(0 calc(var(--cell) * 0.1) calc(var(--cell) * 0.15) rgba(0,0,0,0.25));
+}
+
+/* On orange theme: swap clouds → music emoji */
+:root[data-theme="orange"] .cloud { display: none; }
+:root[data-theme="orange"] .emoji-float { display: block; }
 
 /* Cloud cells are placed via inline grid-area in JS (or template).
    We will render them as .cell.w / .cell.ws via JS. */
