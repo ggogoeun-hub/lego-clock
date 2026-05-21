@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-mode="digital">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -12,9 +12,17 @@
   <link rel="icon" href="icon-180.png">
   <link rel="manifest" href="manifest.json">
   <title>LEGO Clock</title>
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
+  <!-- D/A mode toggle — always visible, top-left -->
+  <div class="mode-toggle" id="modeToggle">
+    <button class="mode-btn active" data-mode="digital">D</button>
+    <button class="mode-btn" data-mode="analog">A</button>
+  </div>
+
   <div class="sky">
     <!-- Clouds — drift horizontally; each with own speed + phase -->
     <div class="cloud" style="top: 14%;  --d: 90s;  --del:   0s;"></div>
@@ -46,6 +54,33 @@
     </div>
   </div>
 
-  <script src="script.js?v=7"></script>
+  <!-- Analog mode screen -->
+  <div class="analog-screen" id="analogScreen">
+    <div class="analog-clock-wrap">
+      <div class="analog-dial"></div>
+      <svg viewBox="0 0 100 100">
+        <g id="analog-ticks"></g>
+        <text class="a-num" x="50" y="16">12</text>
+        <text class="a-num" x="84" y="50">3</text>
+        <text class="a-num" x="50" y="84.5">6</text>
+        <text class="a-num" x="16" y="50">9</text>
+        <rect class="a-date-pill" x="60" y="34.5" width="17" height="6.6" rx="3.3"></rect>
+        <text class="a-date-text" id="analogDate" x="68.5" y="38">--- --</text>
+        <line class="a-hand a-hour"   id="analogHour"   x1="50" y1="50" x2="50" y2="30"></line>
+        <line class="a-hand a-minute" id="analogMinute" x1="50" y1="50" x2="50" y2="20"></line>
+        <line class="a-hand a-second" id="analogSecond" x1="50" y1="58" x2="50" y2="18"></line>
+        <circle class="a-cap"         cx="50" cy="50" r="2.4"></circle>
+        <circle class="a-cap-ring"    cx="50" cy="50" r="2.4"></circle>
+        <circle class="a-cap-accent"  cx="50" cy="50" r="1"></circle>
+      </svg>
+    </div>
+    <div class="analog-picker">
+      <button class="a-swatch active" data-theme="green" aria-label="그린"></button>
+      <button class="a-swatch"        data-theme="white" aria-label="라이트"></button>
+      <button class="a-swatch"        data-theme="black" aria-label="다크"></button>
+    </div>
+  </div>
+
+  <script src="script.js?v=8"></script>
 </body>
 </html>

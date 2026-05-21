@@ -335,9 +335,82 @@ document.querySelectorAll('.color-dot').forEach(btn => {
 const savedTheme = (() => { try { return localStorage.getItem('clockTheme'); } catch (e) { return null; } })();
 if (savedTheme) applyTheme(savedTheme);
 
+/* ===========================
+   ANALOG CLOCK
+   =========================== */
+
+/** Build tick marks once at startup */
+(function buildAnalogTicks() {
+  const g = document.getElementById('analog-ticks');
+  for (let i = 0; i < 60; i++) {
+    if ([0, 15, 30, 45].includes(i)) continue;
+    const major = i % 5 === 0;
+    const ang = (i / 60) * 2 * Math.PI - Math.PI / 2;
+    const rO = 44, rI = major ? 40 : 42;
+    const ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    ln.setAttribute('x1', 50 + Math.cos(ang) * rO);
+    ln.setAttribute('y1', 50 + Math.sin(ang) * rO);
+    ln.setAttribute('x2', 50 + Math.cos(ang) * rI);
+    ln.setAttribute('y2', 50 + Math.sin(ang) * rI);
+    ln.setAttribute('class', 'a-tick' + (major ? ' a-major' : ''));
+    g.appendChild(ln);
+  }
+})();
+
+const ANALOG_DAYS = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+let analogRafId = null;
+
+function analogTick() {
+  const now = new Date();
+  const s = now.getSeconds() + now.getMilliseconds() / 1000;
+  const m = now.getMinutes() + s / 60;
+  const h = (now.getHours() % 12) + m / 60;
+  document.getElementById('analogHour').style.transform   = `rotate(${h * 30}deg)`;
+  document.getElementById('analogMinute').style.transform = `rotate(${m * 6}deg)`;
+  document.getElementById('analogSecond').style.transform = `rotate(${s * 6}deg)`;
+  document.getElementById('analogDate').textContent =
+    `${ANALOG_DAYS[now.getDay()]} ${String(now.getDate()).padStart(2, '0')}`;
+  analogRafId = requestAnimationFrame(analogTick);
+}
+
+/** Analog theme picker */
+function applyAnalogTheme(theme) {
+  document.getElementById('analogScreen').setAttribute('data-theme', theme);
+  document.querySelectorAll('.a-swatch').forEach(btn =>
+    btn.classList.toggle('active', btn.dataset.theme === theme)
+  );
+  try { localStorage.setItem('analogTheme', theme); } catch (e) {}
+}
+
+document.querySelectorAll('.a-swatch').forEach(btn => {
+  btn.addEventListener('click', () => applyAnalogTheme(btn.dataset.theme));
+});
+
+/** Mode switching */
+function applyMode(mode) {
+  document.documentElement.setAttribute('data-mode', mode);
+  document.querySelectorAll('.mode-btn').forEach(btn =>
+    btn.classList.toggle('active', btn.dataset.mode === mode)
+  );
+  if (mode === 'analog' && !analogRafId) {
+    analogRafId = requestAnimationFrame(analogTick);
+  }
+  try { localStorage.setItem('clockMode', mode); } catch (e) {}
+}
+
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyMode(btn.dataset.mode));
+});
+
 /** Init */
 renderClouds();
 renderIcons();
 tick();
 setInterval(tick, 1000);
 requestWakeLock();
+
+const savedAnalogTheme = (() => { try { return localStorage.getItem('analogTheme'); } catch (e) { return null; } })();
+if (savedAnalogTheme) applyAnalogTheme(savedAnalogTheme);
+
+const savedMode = (() => { try { return localStorage.getItem('clockMode'); } catch (e) { return null; } })();
+if (savedMode) applyMode(savedMode);
