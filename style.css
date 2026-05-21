@@ -6,12 +6,17 @@
 
 html, body {
   width: 100%;
-  height: 100%;
+  /* Fall through chain for iOS Safari + PWA standalone */
+  height: 100vh;
+  height: 100dvh;
+  min-height: -webkit-fill-available;
+  background: #4A90E2; /* matches --blue-base so any uncovered area blends */
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
+  overscroll-behavior: none;
 }
 
 /* Color tokens — tuned to match reference image */
@@ -34,8 +39,8 @@ html, body {
   --white-base: #ECEFF3;
   --white-shadow: #B8BCC4;
 
-  /* Cell sizing — clamped so 6 digits + 2 colons + gaps fit with margin */
-  --cell: min(1.8vw, 4.2vh, 32px);
+  /* Cell sizing — tuned for iPad 6 (1024x768) baseline; scales up on larger iPads */
+  --cell: min(1.95vw, 4vh, 24px);
   --bg-stud: calc(var(--cell) / 2);
 }
 
@@ -62,6 +67,12 @@ html, body {
 .sky {
   position: fixed;
   inset: 0;
+  /* respect notch/home-bar safe areas where present (no-op on iPad 6) */
+  padding:
+    env(safe-area-inset-top)
+    env(safe-area-inset-right)
+    env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
   background: var(--blue-base);
   /* Tiled background pattern: 1x1 LEGO studs across blue */
   background-image:
