@@ -317,6 +317,11 @@ html, body {
   will-change: transform;
 }
 
+/* White theme: swap 2nd cloud ↔ CREATIVE art */
+.creative-art                        { display: none; }
+:root[data-theme="white"] .cloud-swap { display: none; }
+:root[data-theme="white"] .creative-art { display: grid; }
+
 /* On orange theme: swap clouds → SVG music floats */
 :root[data-theme="orange"] .cloud { display: none; }
 :root[data-theme="orange"] .icon-float { display: none; }
