@@ -146,19 +146,6 @@ const CLOUD = [
   ['.',  'w',  'w',  'w',  '.' ],  // bot  — 3 cells
 ];
 
-/* LEGO art floats — black blocks inspired by LEGO Creative lettering */
-const LEGO_ART = {
-  creativeC: [
-    '.KKK.',
-    'KK...',
-    'K....',
-    'K....',
-    'K....',
-    'KK...',
-    '.KKK.',
-  ],
-};
-
 const CHAR_CLASS = {
   'B': 'g', 'L': 'gl', 'S': 'gs',
   'g': 'gy', 'd': 'gyd',
@@ -282,11 +269,7 @@ function tick() {
 
 /** Render clouds in their fixed positions */
 function renderClouds() {
-  document.querySelectorAll('.cloud').forEach(el => {
-    const art = el.dataset.art;
-    if (art && LEGO_ART[art]) renderPattern(el, LEGO_ART[art]);
-    else renderCloud(el);
-  });
+  document.querySelectorAll('.cloud').forEach(el => renderCloud(el));
 }
 
 /** Render LEGO icon floats based on their data-icon attribute */
