@@ -153,46 +153,41 @@ const CHAR_CLASS = {
   'K': 'k',
 };
 
-/* LEGO music icons — black (K) body + gray (g) outline, same cell system as digits.
-   Used on orange theme in place of clouds. */
+/* LEGO music notes — pure black blocks (no outline). Used on orange theme. */
 const ICONS = {
-  guitar: [
-    '....gg',
-    '...gKg',
-    '..gKKg',
-    '.gKKg.',
-    '.gKKg.',
-    'gKKKg.',
-    'gKKg..',
-    'gggg..',
+  // B: 큰 4분음표 (긴 스템 + 비스듬한 머리)
+  noteB: [
+    '...K',
+    '...K',
+    '...K',
+    '...K',
+    '...K',
+    '..KK',
+    '.KKK',
+    'KKKK',
+    'KKK.',
   ],
-  note: [
-    '..gg',
-    '.gKg',
-    '.gKg',
-    '.gKg',
-    'gKKg',
-    'gKKg',
-    '.gg.',
+  // C: 8분음표 (꼬리 깃발)
+  noteC: [
+    '..KKK',
+    '..KKK',
+    '..K.K',
+    '..K..',
+    '..K..',
+    '.KK..',
+    'KKK..',
+    'KK...',
   ],
-  note2: [
-    'gggggg',
-    'gKKKKg',
-    '.gKgKg',
-    '.gKgKg',
-    'gKKgKg',
-    'gKKgKg',
-    'gg.gg.',
-  ],
-  mic: [
-    '.ggg.',
-    'gKKKg',
-    'gKKKg',
-    'gKKKg',
-    '.gKg.',
-    '..g..',
-    '..g..',
-    '.ggg.',
+  // D: 이중 음표 (beam 한 줄 + 비스듬한 평행사변형 머리 두 개)
+  noteD: [
+    'KKKKKKKK',
+    '.K....K.',
+    '.K....K.',
+    '.K....K.',
+    '.K....K.',
+    'KK...KK.',
+    'KKK..KKK',
+    '.KK...KK',
   ],
 };
 

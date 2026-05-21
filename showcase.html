@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>음표 시안</title>
+  <link rel="stylesheet" href="style.css?v=3">
+  <style>
+    :root {
+      --cell: 28px;       /* 시안에서는 크게 고정 */
+      --bg-stud: 14px;
+    }
+    html, body { height: auto; overflow: auto; }
+    body {
+      background: #4A90E2
+        radial-gradient(circle at 50% 50%,
+          rgba(255,255,255,0.22) 0%,
+          rgba(255,255,255,0.22) 22%,
+          rgba(0,0,0,0.10) 26%,
+          rgba(0,0,0,0.10) 32%,
+          transparent 34%);
+      background-size: 14px 14px;
+      padding: 40px;
+    }
+    h1 {
+      color: white;
+      font-family: 'Courier New', monospace;
+      font-weight: 700;
+      margin-bottom: 24px;
+      text-shadow: 0 2px 0 rgba(0,0,0,0.4);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 60px 40px;
+      max-width: 1200px;
+    }
+    .sample {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 24px 16px;
+      background: rgba(0,0,0,0.08);
+      backdrop-filter: blur(6px);
+      border-radius: 12px;
+      min-height: 280px;
+      justify-content: flex-end;
+    }
+    .sample-pattern {
+      display: grid;
+      gap: 0;
+    }
+    .sample-label {
+      color: white;
+      font-family: 'Courier New', monospace;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+      text-align: center;
+    }
+    .sample-label small {
+      display: block;
+      font-size: 12px;
+      opacity: 0.85;
+      margin-top: 4px;
+      letter-spacing: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>음표 LEGO 시안 — 마음에 드는 번호 알려주세요</h1>
+  <div class="grid">
+    <div class="sample"><div class="sample-pattern" id="s1"></div><div class="sample-label">A<small>작은 4분음표</small></div></div>
+    <div class="sample"><div class="sample-pattern" id="s2"></div><div class="sample-label">B<small>큰 4분음표</small></div></div>
+    <div class="sample"><div class="sample-pattern" id="s3"></div><div class="sample-label">C<small>8분음표 (깃발)</small></div></div>
+    <div class="sample"><div class="sample-pattern" id="s4"></div><div class="sample-label">D<small>이중 음표 (beam)</small></div></div>
+    <div class="sample"><div class="sample-pattern" id="s5"></div><div class="sample-label">E<small>16분음표 (double flag)</small></div></div>
+    <div class="sample"><div class="sample-pattern" id="s6"></div><div class="sample-label">F<small>점 음표 (dotted)</small></div></div>
+  </div>
+
+  <script>
+    const CHAR_CLASS = {
+      'B':'g','L':'gl','S':'gs',
+      'g':'gy','d':'gyd',
+      'w':'w','W':'ws',
+      'K':'k',
+    };
+    function render(container, rows) {
+      const cols = Math.max(...rows.map(r => r.length));
+      container.style.gridTemplateColumns = `repeat(${cols}, var(--cell))`;
+      container.style.gridTemplateRows = `repeat(${rows.length}, var(--cell))`;
+      rows.forEach(row => {
+        const padded = row.padEnd(cols, '.');
+        for (const ch of padded) {
+          const div = document.createElement('div');
+          if (ch === '.') div.style.background = 'transparent';
+          else div.className = 'cell ' + (CHAR_CLASS[ch] || '');
+          container.appendChild(div);
+        }
+      });
+    }
+
+    const SAMPLES = {
+      // A. 단순 4분음표 (slim)
+      s1: [
+        '..K',
+        '..K',
+        '..K',
+        '..K',
+        '.KK',
+        'KKK',
+        'KKK',
+        'KK.',
+      ],
+      // B. 큰 4분음표 (긴 스템 + 큰 머리)
+      s2: [
+        '...K',
+        '...K',
+        '...K',
+        '...K',
+        '...K',
+        '..KK',
+        '.KKK',
+        'KKKK',
+        'KKK.',
+      ],
+      // C. 8분음표 (꼬리 깃발)
+      s3: [
+        '..KKK',
+        '..KKK',
+        '..K.K',
+        '..K..',
+        '..K..',
+        '.KK..',
+        'KKK..',
+        'KK...',
+      ],
+      // D. 이중 음표 (beam — 빔 한 줄 + 비스듬한 평행사변형 머리)
+      s4: [
+        'KKKKKKKK',
+        '.K....K.',
+        '.K....K.',
+        '.K....K.',
+        '.K....K.',
+        'KK...KK.',
+        'KKK..KKK',
+        '.KK...KK',
+      ],
+      // E. 16분음표 (double flag)
+      s5: [
+        '..KKK',
+        '..KKK',
+        '..K..',
+        '..KKK',
+        '..KKK',
+        '..K..',
+        '.KK..',
+        'KKK..',
+        'KK...',
+      ],
+      // F. 점 음표 (4분음표 + 점)
+      s6: [
+        '..K....',
+        '..K....',
+        '..K....',
+        '.KK..KK',
+        'KKK..KK',
+        'KK.....',
+      ],
+    };
+
+    Object.entries(SAMPLES).forEach(([id, rows]) => {
+      const el = document.getElementById(id);
+      if (el) render(el, rows);
+    });
+  </script>
+</body>
+</html>
