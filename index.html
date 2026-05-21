@@ -12,7 +12,7 @@
   <link rel="icon" href="icon-180.png">
   <link rel="manifest" href="manifest.json">
   <title>LEGO Clock</title>
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
   <div class="sky">
@@ -22,11 +22,11 @@
     <div class="cloud" style="bottom: 14%; --d: 105s; --del: -75s;"></div>
     <div class="cloud" style="bottom: 6%;  --d: 80s;  --del: -25s;"></div>
 
-    <!-- LEGO music notes (B / C / D / B) — visible only on orange theme -->
-    <div class="icon-float" data-icon="noteB" style="top: 12%;   --d: 85s;  --del:   0s;"></div>
-    <div class="icon-float" data-icon="noteC" style="top: 24%;   --d: 110s; --del: -45s;"></div>
-    <div class="icon-float" data-icon="noteD" style="bottom: 16%; --d: 95s;  --del: -65s;"></div>
-    <div class="icon-float" data-icon="noteB" style="bottom: 8%;  --d: 75s;  --del: -20s;"></div>
+    <!-- Music SVG floats — visible only on orange theme -->
+    <img class="svg-float" src="icon_image/guitar-svgrepo-com.svg"               alt="" style="top: 12%;   --d: 85s;  --del:   0s;">
+    <img class="svg-float" src="icon_image/music-notes-svgrepo-com.svg"          alt="" style="top: 24%;   --d: 110s; --del: -45s;">
+    <img class="svg-float" src="icon_image/guitar-pick-plectrum-svgrepo-com.svg" alt="" style="bottom: 16%; --d: 95s;  --del: -65s;">
+    <img class="svg-float" src="icon_image/flower-svgrepo-com.svg"               alt="" style="bottom: 8%;  --d: 75s;  --del: -20s;">
 
     <!-- Clock face -->
     <div class="clock">
@@ -45,6 +45,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=4"></script>
+  <script src="script.js?v=7"></script>
 </body>
 </html>

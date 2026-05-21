@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>꽃 시안</title>
+  <link rel="stylesheet" href="style.css?v=6">
+  <style>
+    :root {
+      --cell: 18px;
+      --bg-stud: 9px;
+    }
+    html, body { height: auto; overflow: auto; }
+    body {
+      background: #4A90E2
+        radial-gradient(circle at 50% 50%,
+          rgba(255,255,255,0.22) 0%,
+          rgba(255,255,255,0.22) 22%,
+          rgba(0,0,0,0.10) 26%,
+          rgba(0,0,0,0.10) 32%,
+          transparent 34%);
+      background-size: 9px 9px;
+      padding: 40px;
+    }
+    h1 {
+      color: white;
+      font-family: 'Courier New', monospace;
+      font-weight: 700;
+      margin-bottom: 24px;
+      text-shadow: 0 2px 0 rgba(0,0,0,0.4);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      max-width: 1100px;
+    }
+    .sample {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 24px 16px;
+      background: rgba(0,0,0,0.08);
+      backdrop-filter: blur(6px);
+      border-radius: 12px;
+      min-height: 280px;
+      justify-content: flex-end;
+    }
+    .sample-pattern {
+      display: grid;
+      gap: 0;
+    }
+    .sample-label {
+      color: white;
+      font-family: 'Courier New', monospace;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+      text-align: center;
+    }
+    .sample-label small {
+      display: block;
+      font-size: 12px;
+      opacity: 0.85;
+      margin-top: 4px;
+      letter-spacing: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>꽃 LEGO 시안 — 자체 디자인</h1>
+  <div class="grid">
+    <div class="sample"><div class="sample-pattern" id="f1"></div><div class="sample-label">A<small>단순 원형 꽃 (7×7)</small></div></div>
+    <div class="sample"><div class="sample-pattern" id="f2"></div><div class="sample-label">B<small>4잎 꽃 / 클로버 (9×9)</small></div></div>
+    <div class="sample"><div class="sample-pattern" id="f3"></div><div class="sample-label">C<small>5잎 꽃 + 잎사귀 (11×11)</small></div></div>
+  </div>
+
+  <script>
+    const CHAR_CLASS = {
+      'B':'g','L':'gl','S':'gs',
+      'g':'gy','d':'gyd',
+      'w':'w','W':'ws',
+      'K':'k',
+      'O':'br','D':'wd',
+      '1':'c1','2':'c2','3':'c3','4':'c4','5':'c5','6':'c6','7':'c7','8':'c8',
+    };
+    function render(container, rows) {
+      const cols = Math.max(...rows.map(r => r.length));
+      container.style.gridTemplateColumns = `repeat(${cols}, var(--cell))`;
+      container.style.gridTemplateRows = `repeat(${rows.length}, var(--cell))`;
+      rows.forEach(row => {
+        const padded = row.padEnd(cols, '.');
+        for (const ch of padded) {
+          const div = document.createElement('div');
+          if (ch === '.') div.style.background = 'transparent';
+          else div.className = 'cell ' + (CHAR_CLASS[ch] || '');
+          container.appendChild(div);
+        }
+      });
+    }
+
+    const SAMPLES = {
+      // A. 단순 원형 꽃 — 노랑 + 가운데 오렌지
+      f1: [
+        '.22222.',
+        '22222222',
+        '2277722.',
+        '2277722.',
+        '2277722.',
+        '22222222',
+        '.22222.',
+      ],
+      // B. 4잎 꽃 (잎 사이 분리)
+      f2: [
+        '.22..22..',
+        '222222222',
+        '222777222',
+        '227777722',
+        '2277B7722',
+        '227777722',
+        '222777222',
+        '222222222',
+        '.22..22..',
+      ],
+      // C. 5잎 꽃 + 잎사귀 (잎 더 명확)
+      f3: [
+        '...222.....',
+        '..22222....',
+        '22222222222',
+        '22222722222',
+        '22277722222',
+        '22277772222',
+        '22277722.22',
+        '22222722222',
+        '22222222222',
+        '..22222....',
+        '...222.....',
+      ],
+    };
+
+    Object.entries(SAMPLES).forEach(([id, rows]) => {
+      const el = document.getElementById(id);
+      if (el) render(el, rows);
+    });
+  </script>
+</body>
+</html>

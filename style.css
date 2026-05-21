@@ -43,6 +43,21 @@ html, body {
   --ink-light: #4A4A4A;
   --ink-dark:  #0A0A0A;
 
+  --wood-base:   #B07845;
+  --wood-light:  #D49B6A;
+  --wood-dark:   #6B3F18;
+  --wood-darker: #3D2208;
+
+  /* Guitar showcase palette */
+  --cream-base:  #E8C690; --cream-light:  #F2D9AC; --cream-dark:  #B0925F;
+  --yellow-base: #E8B82C; --yellow-light: #F4D158; --yellow-dark: #A88412;
+  --red-base:    #C42E2E; --red-light:    #E55A5A; --red-dark:    #8A1A1A;
+  --wine-base:   #6B1E2E; --wine-light:   #8F3245; --wine-dark:   #3A0D17;
+  --blue2-base:  #2B5F9A; --blue2-light:  #4E84BC; --blue2-dark:  #173B68;
+  --silver-base: #B5BAC0; --silver-light: #DDE0E4; --silver-dark: #6D7177;
+  --orange-base: #EF7C28; --orange-light: #FFA85A; --orange-dark: #B5560A;
+  --grass-base:  #2DA837; --grass-light:  #4DCB58; --grass-dark:  #1A7321;
+
   /* Cell sizing — tuned for iPad 6 (1024x768) baseline; scales up on larger iPads */
   --cell: min(1.95vw, 4vh, 24px);
   --bg-stud: calc(var(--cell) / 2);
@@ -137,6 +152,16 @@ html, body {
 .cell.w  { --c: var(--white-base);   --c-hi: #FFFFFF;             --c-lo: var(--white-shadow); }
 .cell.ws { --c: var(--white-shadow); --c-hi: var(--white-base);   --c-lo: #95A1B3; }
 .cell.k  { --c: var(--ink-base);     --c-hi: var(--ink-light);    --c-lo: var(--ink-dark); }
+.cell.br { --c: var(--wood-base);    --c-hi: var(--wood-light);   --c-lo: var(--wood-dark); }
+.cell.wd { --c: var(--wood-dark);    --c-hi: var(--wood-base);    --c-lo: var(--wood-darker); }
+.cell.c1 { --c: var(--cream-base);   --c-hi: var(--cream-light);  --c-lo: var(--cream-dark); }
+.cell.c2 { --c: var(--yellow-base);  --c-hi: var(--yellow-light); --c-lo: var(--yellow-dark); }
+.cell.c3 { --c: var(--red-base);     --c-hi: var(--red-light);    --c-lo: var(--red-dark); }
+.cell.c4 { --c: var(--wine-base);    --c-hi: var(--wine-light);   --c-lo: var(--wine-dark); }
+.cell.c5 { --c: var(--blue2-base);   --c-hi: var(--blue2-light);  --c-lo: var(--blue2-dark); }
+.cell.c6 { --c: var(--silver-base);  --c-hi: var(--silver-light); --c-lo: var(--silver-dark); }
+.cell.c7 { --c: var(--orange-base); --c-hi: var(--orange-light); --c-lo: var(--orange-dark); }
+.cell.c8 { --c: var(--grass-base);  --c-hi: var(--grass-light);  --c-lo: var(--grass-dark); }
 
 /* ===========================
    CLOCK LAYOUT
@@ -292,9 +317,28 @@ html, body {
   will-change: transform;
 }
 
-/* On orange theme: swap clouds → LEGO music icons */
+/* On orange theme: swap clouds → SVG music floats */
 :root[data-theme="orange"] .cloud { display: none; }
-:root[data-theme="orange"] .icon-float { display: grid; }
+:root[data-theme="orange"] .icon-float { display: none; }
+:root[data-theme="orange"] .svg-float { display: block; }
+
+/* SVG floats (used on orange theme) */
+.svg-float {
+  position: fixed;
+  left: 0;
+  width: calc(var(--cell) * 5);
+  height: auto;
+  display: none;
+  animation: cloud-drift var(--d, 90s) linear infinite;
+  animation-delay: var(--del, 0s);
+  will-change: transform;
+  pointer-events: none;
+  filter: drop-shadow(0 calc(var(--cell) * 0.1) calc(var(--cell) * 0.15) rgba(0,0,0,0.25));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svg-float { animation: none; }
+}
 
 /* Cloud cells are placed via inline grid-area in JS (or template).
    We will render them as .cell.w / .cell.ws via JS. */
